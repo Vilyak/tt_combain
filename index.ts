@@ -32,6 +32,6 @@ import {executablePath} from 'puppeteer'
         const autoFollower = new AutoFollower(browser, accountConfig);
 
         responser.start();
-        //autoFollower.start();
+        autoFollower.start();
     }
 })();

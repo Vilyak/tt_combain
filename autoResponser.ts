@@ -32,6 +32,10 @@ export class BaseBrowser {
         }
         await this.setCookies();
     }
+
+    log(text: string) {
+        console.log(text);
+    }
 }
 
 export class AutoResponser extends BaseBrowser {
@@ -58,11 +62,15 @@ export class AutoResponser extends BaseBrowser {
         return result;
     }
 
+    log(text: string) {
+        console.log(`[Автоответчик] - ${text}`);
+    }
+
     async start() {
         await super.start();
         const page = this.page;
 
-        console.log('Автоответчик начал работу!');
+        this.log('Автоответчик начал работу!');
         while (true) {
             await page.goto('https://www.tiktok.com/messages');
 
@@ -94,7 +102,7 @@ export class AutoResponser extends BaseBrowser {
 
                     await delay(3000);
                 }
-                console.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
+                this.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
             }
         }
     }
@@ -113,16 +121,30 @@ export class AutoFollower extends BaseBrowser {
 
             const messageBtn = await page.$$(`button[class*=StyledMessageButton]`);
 
-            if (!messageBtn.length) {
-                await page.waitForSelector('div[data-e2e=follow-button]');
+            const error = await page.$$(`main > div[class*=DivErrorContainer]`);
 
-                await page.click('div[data-e2e=follow-button]');
+            if (!error.length) {
+                if (!messageBtn.length) {
+                    await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 30000});
 
-                await page.goto(`https://www.tiktok.com/setting?lang=en`);
+                    await page.click('div[data-e2e=follow-button]');
 
-                await delay(600000);
+                    await page.goto(`https://www.tiktok.com/setting?lang=en`);
+
+                    await delay(600000);
+                }
+                else {
+                    this.log('[Внимание] вы уже подписаны на пользователя!');
+                }
+            }
+            else {
+                this.log('[Ошибка] пользователь не найден!');
             }
         }
+    }
+
+    log(text: string) {
+        console.log(`[Автоподписка] - ${text}`);
     }
 }
 
