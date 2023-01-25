@@ -21,7 +21,7 @@ import {executablePath} from 'puppeteer'
         const browser = await puppeteer.launch({
             headless: true,
             executablePath: executablePath(),
-            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox'] : ['--no-sandbox'],
+            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox', '--disable-setuid-sandbox'],
         });
         const responser = new AutoResponser(browser, accountConfig);
         const autoFollower = new AutoFollower(browser, accountConfig);
