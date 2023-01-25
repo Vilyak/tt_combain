@@ -78,7 +78,7 @@ export class AutoResponser extends BaseBrowser {
             const otherMessages = await page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`)
             const allMessages = await page.$$(`div[class*=DivMessageContainer]`)
 
-            if ((allMessages.length - otherMessages.length) === 0) {
+            if ((allMessages.length - otherMessages.length) !== 0) {
                 const messages = this.props.autoResponder?.messages || [];
 
                 for (const message of messages) {
