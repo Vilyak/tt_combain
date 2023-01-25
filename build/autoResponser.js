@@ -110,6 +110,7 @@ class AutoFollower extends BaseBrowser {
             const page = this.page;
             const contentOfFollowers = yield fs.readFile((0, path_1.resolve)(__dirname, this.props.autoFollower.followersPath));
             const followers = contentOfFollowers.toString().split('\n');
+            this.log('Автоподписка запущена!');
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
                 const messageBtn = yield page.$$(`button[class*=StyledMessageButton]`);
@@ -126,7 +127,7 @@ class AutoFollower extends BaseBrowser {
                     }
                 }
                 else {
-                    this.log('[Ошибка] пользователь не найден!');
+                    this.log(`[Ошибка] пользователь @${login} не найден!`);
                 }
             }
         });

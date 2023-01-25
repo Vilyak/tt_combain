@@ -116,6 +116,8 @@ export class AutoFollower extends BaseBrowser {
         const contentOfFollowers: Buffer = await fs.readFile(resolve(__dirname, this.props.autoFollower.followersPath));
         const followers = contentOfFollowers.toString().split('\n');
 
+        this.log('Автоподписка запущена!');
+
         for (const login of followers) {
             await page.goto(`https://www.tiktok.com/@${login}`);
 
@@ -138,7 +140,7 @@ export class AutoFollower extends BaseBrowser {
                 }
             }
             else {
-                this.log('[Ошибка] пользователь не найден!');
+                this.log(`[Ошибка] пользователь @${login} не найден!`);
             }
         }
     }
