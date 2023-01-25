@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
-    "puppeteer": "^19.6.0",
+    "puppeteer": "^18",
     "puppeteer-core": "^19.5.2",
     "puppeteer-extra": "^3.3.4",
     "puppeteer-extra-plugin-stealth": "^2.11.1",
