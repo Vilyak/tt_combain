@@ -94,9 +94,8 @@ export class AutoResponser extends BaseBrowser {
 
                     await delay(3000);
                 }
+                console.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
             }
-
-            console.log(`Отослал сообщение пользователю: ${nickname}`);
         }
     }
 }

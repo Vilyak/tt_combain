@@ -77,7 +77,7 @@ class AutoResponser extends BaseBrowser {
                 const nickname = yield page.evaluate(el => el.textContent, element);
                 const otherMessages = yield page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`);
                 const allMessages = yield page.$$(`div[class*=DivMessageContainer]`);
-                if ((allMessages.length - otherMessages.length) === 0) {
+                if ((allMessages.length - otherMessages.length) !== 0) {
                     const messages = ((_a = this.props.autoResponder) === null || _a === void 0 ? void 0 : _a.messages) || [];
                     for (const message of messages) {
                         const randomizedMessage = this.randomizeMessageLetters(message);
@@ -87,8 +87,8 @@ class AutoResponser extends BaseBrowser {
                         yield page.click('svg[data-e2e=message-send');
                         yield delay(3000);
                     }
+                    console.log(`Отослал сообщение пользователю: ${nickname}`);
                 }
-                console.log(`Отослал сообщение пользователю: ${nickname}`);
             }
         });
     }
