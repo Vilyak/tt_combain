@@ -61,7 +61,7 @@ const puppeteer_1 = require("puppeteer");
         const responser = new autoResponser_1.AutoResponser(browser, accountConfig);
         const autoFollower = new autoResponser_1.AutoFollower(browser, accountConfig);
         responser.start();
-        //autoFollower.start();
+        autoFollower.start();
     }
 }))();
 //# sourceMappingURL=index.js.map

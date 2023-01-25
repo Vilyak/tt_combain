@@ -39,6 +39,9 @@ class BaseBrowser {
             yield this.setCookies();
         });
     }
+    log(text) {
+        console.log(text);
+    }
 }
 exports.BaseBrowser = BaseBrowser;
 class AutoResponser extends BaseBrowser {
@@ -59,6 +62,9 @@ class AutoResponser extends BaseBrowser {
         }
         return result;
     }
+    log(text) {
+        console.log(`[Автоответчик] - ${text}`);
+    }
     start() {
         const _super = Object.create(null, {
             start: { get: () => super.start }
@@ -67,7 +73,7 @@ class AutoResponser extends BaseBrowser {
         return __awaiter(this, void 0, void 0, function* () {
             yield _super.start.call(this);
             const page = this.page;
-            console.log('Автоответчик начал работу!');
+            this.log('Автоответчик начал работу!');
             while (true) {
                 yield page.goto('https://www.tiktok.com/messages');
                 yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2592000 });
@@ -87,7 +93,7 @@ class AutoResponser extends BaseBrowser {
                         yield page.click('svg[data-e2e=message-send');
                         yield delay(3000);
                     }
-                    console.log(`Отослал сообщение пользователю: ${nickname}`);
+                    this.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
                 }
             }
         });
@@ -107,14 +113,26 @@ class AutoFollower extends BaseBrowser {
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
                 const messageBtn = yield page.$$(`button[class*=StyledMessageButton]`);
-                if (!messageBtn.length) {
-                    yield page.waitForSelector('div[data-e2e=follow-button]');
-                    yield page.click('div[data-e2e=follow-button]');
-                    yield page.goto(`https://www.tiktok.com/setting?lang=en`);
-                    yield delay(600000);
+                const error = yield page.$$(`main > div[class*=DivErrorContainer]`);
+                if (!error.length) {
+                    if (!messageBtn.length) {
+                        yield page.waitForSelector('div[data-e2e=follow-button]', { timeout: 30000 });
+                        yield page.click('div[data-e2e=follow-button]');
+                        yield page.goto(`https://www.tiktok.com/setting?lang=en`);
+                        yield delay(600000);
+                    }
+                    else {
+                        this.log('[Внимание] вы уже подписаны на пользователя!');
+                    }
+                }
+                else {
+                    this.log('[Ошибка] пользователь не найден!');
                 }
             }
         });
+    }
+    log(text) {
+        console.log(`[Автоподписка] - ${text}`);
     }
 }
 exports.AutoFollower = AutoFollower;
