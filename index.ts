@@ -18,15 +18,20 @@ import {executablePath} from 'puppeteer'
         }
 
         puppeteer.use(StealthPlugin())
-        const browser = await puppeteer.launch({
+        const options = process.env.debug ? {
+            headless: false,
+            executablePath: executablePath(),
+            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox', '--disable-setuid-sandbox'],
+        } : {
             headless: true,
             executablePath: '/usr/bin/chromium-browser',
             args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
+        };
+        const browser = await puppeteer.launch(options);
         const responser = new AutoResponser(browser, accountConfig);
         const autoFollower = new AutoFollower(browser, accountConfig);
 
         responser.start();
-        autoFollower.start();
+        //autoFollower.start();
     }
 })();

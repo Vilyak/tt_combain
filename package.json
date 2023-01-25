@@ -2,7 +2,8 @@
   "name": "tt",
   "version": "0.1",
   "scripts": {
-    "start": "tsc & node build/index.js"
+    "start": "tsc & node build/index.js",
+    "debug": "tsc & debug=true node build/index.js"
   },
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
