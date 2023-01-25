@@ -127,7 +127,7 @@ export class AutoFollower extends BaseBrowser {
 
             if (!error.length) {
                 if (!messageBtn.length) {
-                    await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 30000});
+                    await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 25000});
 
                     await page.click('div[data-e2e=follow-button]');
 
