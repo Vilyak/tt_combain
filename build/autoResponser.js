@@ -67,6 +67,7 @@ class AutoResponser extends BaseBrowser {
         return __awaiter(this, void 0, void 0, function* () {
             yield _super.start.call(this);
             const page = this.page;
+            console.log('Автоответчик начал работу!');
             while (true) {
                 yield page.goto('https://www.tiktok.com/messages');
                 yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2592000 });
@@ -74,7 +75,6 @@ class AutoResponser extends BaseBrowser {
                 yield page.waitForSelector('div[data-e2e=message-input-area]', { timeout: 2592000 });
                 const element = yield page.$('p[data-e2e=chat-uniqueid]');
                 const nickname = yield page.evaluate(el => el.textContent, element);
-                console.log(nickname);
                 const otherMessages = yield page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`);
                 const allMessages = yield page.$$(`div[class*=DivMessageContainer]`);
                 if ((allMessages.length - otherMessages.length) === 0) {
@@ -88,6 +88,7 @@ class AutoResponser extends BaseBrowser {
                         yield delay(3000);
                     }
                 }
+                console.log(`Отослал сообщение пользователю: ${nickname}`);
             }
         });
     }

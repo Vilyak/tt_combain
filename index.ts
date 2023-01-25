@@ -19,9 +19,9 @@ import {executablePath} from 'puppeteer'
 
         puppeteer.use(StealthPlugin())
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             executablePath: executablePath(),
-            args: accountConfig.proxy.host ? [`--proxy-server=${accountConfig.proxy.host}`] : undefined,
+            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox'] : ['--no-sandbox'],
         });
         const responser = new AutoResponser(browser, accountConfig);
         const autoFollower = new AutoFollower(browser, accountConfig);

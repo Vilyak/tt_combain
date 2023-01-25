@@ -62,6 +62,7 @@ export class AutoResponser extends BaseBrowser {
         await super.start();
         const page = this.page;
 
+        console.log('Автоответчик начал работу!');
         while (true) {
             await page.goto('https://www.tiktok.com/messages');
 
@@ -73,7 +74,6 @@ export class AutoResponser extends BaseBrowser {
 
             const element = await page.$('p[data-e2e=chat-uniqueid]')
             const nickname = await page.evaluate(el => el.textContent, element);
-            console.log(nickname);
 
             const otherMessages = await page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`)
             const allMessages = await page.$$(`div[class*=DivMessageContainer]`)
@@ -95,6 +95,8 @@ export class AutoResponser extends BaseBrowser {
                     await delay(3000);
                 }
             }
+
+            console.log(`Отослал сообщение пользователю: ${nickname}`);
         }
     }
 }

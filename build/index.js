@@ -35,26 +35,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const autoResponser_1 = require("./autoResponser");
 const path = __importStar(require("path"));
 const fs_1 = require("fs");
 const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
 const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 const puppeteer_1 = require("puppeteer");
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const buffer = yield fs_1.promises.readFile(path.resolve(__dirname, '../config.json'));
     const accounts = JSON.parse(buffer.toString());
     for (const account of accounts) {
         const accountConfig = Object.assign(Object.assign({}, account), { cookiesPath: path.resolve(__dirname, account.cookiesPath) });
         puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
         const browser = yield puppeteer_extra_1.default.launch({
-            headless: false,
+            headless: true,
             executablePath: (0, puppeteer_1.executablePath)(),
-            args: accountConfig.proxy.host ? [`--proxy-server=${accountConfig.proxy.host}`] : undefined,
+            args: ((_a = accountConfig.proxy) === null || _a === void 0 ? void 0 : _a.host) ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox'] : ['--no-sandbox'],
         });
-        //const responser = new AutoResponser(browser, accountConfig);
-        //const autoFollower = new AutoFollower(browser, accountConfig);
-        //responser.start();
-        //autoFollower.start();
+        const responser = new autoResponser_1.AutoResponser(browser, accountConfig);
+        const autoFollower = new autoResponser_1.AutoFollower(browser, accountConfig);
+        responser.start();
+        autoFollower.start();
     }
 }))();
 //# sourceMappingURL=index.js.map
