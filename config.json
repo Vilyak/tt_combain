@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "cookiesPath": "../cookies/1.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "test1",
+        "test2",
+        "test3"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/1.txt"
+    }
+  }
+]

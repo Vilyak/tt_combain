@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "declaration": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "outDir": "build",
+    "esModuleInterop": true
+  },
+  "include": [
+    "src",
+    "cookies",
+    "index.ts",
+    "autoResponser.ts",
+    "node_modules/puppeteer/lib/types.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}
