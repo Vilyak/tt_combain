@@ -15,7 +15,7 @@
       "followersPath": "../followers/1.txt"
     },
     "proxy": {
-      "host": "socks5://103.151.103.2:64989",
+      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
