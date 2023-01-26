@@ -123,20 +123,22 @@ export class AutoFollower extends BaseBrowser {
 
             const messageBtn = await page.$$(`button[class*=StyledMessageButton]`);
 
-            const error = await page.$$(`main > div[class*=DivErrorContainer]`);
+            const error = await page.$$(`p[class*="Title emuynwa"]`);
 
             if (!error.length) {
                 if (!messageBtn.length) {
-                    await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 25000});
+                    await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 30000});
 
                     await page.click('div[data-e2e=follow-button]');
+
+                    this.log(`Бот (${this.props.id}) успешно подписался на пользователя @${login}!`);
 
                     await page.goto(`https://www.tiktok.com/setting?lang=en`);
 
                     await delay(600000);
                 }
                 else {
-                    this.log('[Внимание] вы уже подписаны на пользователя!');
+                    this.log(`[Внимание] Бот (${this.props.id}) уже подписан на пользователя @${login}!`);
                 }
             }
             else {
