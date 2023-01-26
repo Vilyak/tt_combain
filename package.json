@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
-    "node-fetch": "^3.3.0",
     "puppeteer": "^18",
     "puppeteer-core": "^19.5.2",
     "puppeteer-extra": "^3.3.4",

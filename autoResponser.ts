@@ -1,7 +1,7 @@
 import {Browser, Page} from 'puppeteer';
 import {BaseTTProps} from "./types";
 import {resolve} from "path";
-import fetch from 'node-fetch';
+import * as http from 'https';
 const fs = require('fs').promises;
 
 export class BaseBrowser {
@@ -35,8 +35,19 @@ export class BaseBrowser {
     }
 
     log(text: string) {
-        const postBackUrl = `http://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657&text=${text}`
-        fetch(postBackUrl);
+        const options = {
+            hostname: 'http://api.telegram.org',
+            path: `/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657&text=${text}`,
+            method: 'GET',
+        }
+
+        http.request(options, resp => {
+            resp.on("data", d => {
+                });
+            })
+            .on("error", err => {
+                console.log("Error: " + err.message);
+            });
     }
 }
 
