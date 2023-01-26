@@ -106,7 +106,7 @@ export class AutoResponser extends BaseBrowser {
             const otherMessages = await page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`)
             const allMessages = await page.$$(`div[class*=DivMessageContainer]`)
 
-            if ((allMessages.length - otherMessages.length) !== 0) {
+            if ((allMessages.length - otherMessages.length) === 0) {
                 const messages = this.props.autoResponder?.messages || [];
 
                 for (const message of messages) {
@@ -164,9 +164,11 @@ export class AutoFollower extends BaseBrowser {
 
             if (!error.length || !error2.length) {
                 await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
-                const followBtn = await page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
+                const followText = await page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
 
-                if (!followBtn.length) {
+                await delay(2000);
+
+                if (followText === 'Follow') {
                     await page.waitForSelector('button[data-e2e=follow-button]',{timeout: 30000});
 
                     await page.click('button[data-e2e=follow-button]');
@@ -177,12 +179,12 @@ export class AutoFollower extends BaseBrowser {
 
                     await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
 
+                    const btnText = await page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
+
                     await delay(2000);
 
-                    const followBtnIcon = await page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
-
-                    if (!followBtnIcon) {
-                        this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ТЕНЕВОЙ БАН`);
+                    if (btnText === 'Follow') {
+                        this.log(`Бот #${this.props.id} не смог подписаться на пользователя @${login}! ТЕНЕВОЙ БАН`);
                     }
                     else {
                         this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
@@ -218,4 +220,16 @@ function randomInt(min: number, max: number) {
 
 async function delay(ms: number) {
     return await new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function isLocatorReady(element: any, page: Page) {
+    const isVisibleHandle = await page.evaluateHandle((e) =>
+    {
+        const style = window.getComputedStyle(e);
+        return (style && style.display !== 'none' &&
+            style.visibility !== 'hidden' && style.opacity !== '0');
+    }, element);
+    var visible = await isVisibleHandle.jsonValue();
+    const box = await element.boxModel();
+    return visible;
 }

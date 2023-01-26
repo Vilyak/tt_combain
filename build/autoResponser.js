@@ -99,7 +99,7 @@ class AutoResponser extends BaseBrowser {
                 const nickname = yield page.evaluate(el => el.textContent, element);
                 const otherMessages = yield page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`);
                 const allMessages = yield page.$$(`div[class*=DivMessageContainer]`);
-                if ((allMessages.length - otherMessages.length) !== 0) {
+                if ((allMessages.length - otherMessages.length) === 0) {
                     const messages = ((_a = this.props.autoResponder) === null || _a === void 0 ? void 0 : _a.messages) || [];
                     for (const message of messages) {
                         const randomizedMessage = this.randomizeMessageLetters(message);
@@ -148,17 +148,18 @@ class AutoFollower extends BaseBrowser {
                 const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
                 if (!error.length || !error2.length) {
                     yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
-                    const followBtn = yield page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
-                    if (!followBtn.length) {
+                    const followText = yield page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
+                    yield delay(2000);
+                    if (followText === 'Follow') {
                         yield page.waitForSelector('button[data-e2e=follow-button]', { timeout: 30000 });
                         yield page.click('button[data-e2e=follow-button]');
                         yield delay(3000);
                         yield page.goto(`https://www.tiktok.com/@${login}`);
                         yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
+                        const btnText = yield page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
                         yield delay(2000);
-                        const followBtnIcon = yield page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
-                        if (!followBtnIcon) {
-                            this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ТЕНЕВОЙ БАН`);
+                        if (btnText === 'Follow') {
+                            this.log(`Бот #${this.props.id} не смог подписаться на пользователя @${login}! ТЕНЕВОЙ БАН`);
                         }
                         else {
                             this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
@@ -191,6 +192,18 @@ function randomInt(min, max) {
 function delay(ms) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield new Promise(resolve => setTimeout(resolve, ms));
+    });
+}
+function isLocatorReady(element, page) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const isVisibleHandle = yield page.evaluateHandle((e) => {
+            const style = window.getComputedStyle(e);
+            return (style && style.display !== 'none' &&
+                style.visibility !== 'hidden' && style.opacity !== '0');
+        }, element);
+        var visible = yield isVisibleHandle.jsonValue();
+        const box = yield element.boxModel();
+        return visible;
     });
 }
 //# sourceMappingURL=autoResponser.js.map
