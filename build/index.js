@@ -45,13 +45,15 @@ const puppeteer_1 = require("puppeteer");
     var _a, _b;
     const buffer = yield fs_1.promises.readFile(path.resolve(__dirname, '../config.json'));
     const accounts = JSON.parse(buffer.toString());
+    const status = [];
     for (const account of accounts) {
         const accountConfig = Object.assign(Object.assign({}, account), { cookiesPath: path.resolve(__dirname, account.cookiesPath) });
         puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
+        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
         const options = process.env.debug ? {
             headless: false,
             executablePath: (0, puppeteer_1.executablePath)(),
-            args: ((_a = accountConfig.proxy) === null || _a === void 0 ? void 0 : _a.host) ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: ((_a = accountConfig.proxy) === null || _a === void 0 ? void 0 : _a.host) ? [`--proxy-server=${accountConfig.proxy.host}`, ...baseParams] : baseParams,
         } : {
             headless: true,
             executablePath: '/usr/bin/chromium-browser',
@@ -60,8 +62,10 @@ const puppeteer_1 = require("puppeteer");
         const browser = yield puppeteer_extra_1.default.launch(options);
         const responser = new autoResponser_1.AutoResponser(browser, accountConfig);
         const autoFollower = new autoResponser_1.AutoFollower(browser, accountConfig);
-        responser.start();
-        autoFollower.start();
+        const responserResult = yield responser.start();
+        const autoFollowerResult = yield autoFollower.start();
+        status.push({ name: `Аккаунт #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult });
     }
+    autoResponser_1.BaseBrowser.log(JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  '));
 }))();
 //# sourceMappingURL=index.js.map

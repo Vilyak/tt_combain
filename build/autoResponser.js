@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AutoFollower = exports.AutoResponser = exports.BaseBrowser = void 0;
 const path_1 = require("path");
-const http = __importStar(require("https"));
+const child_process_1 = require("child_process");
 const fs = require('fs').promises;
 class BaseBrowser {
     constructor(browser, props) {
@@ -61,21 +38,12 @@ class BaseBrowser {
                 });
             }
             yield this.setCookies();
+            return 'НЕ Запущено!';
         });
     }
-    log(text) {
-        const options = {
-            hostname: 'http://api.telegram.org',
-            path: `/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657&text=${text}`,
-            method: 'GET',
-        };
-        http.request(options, resp => {
-            resp.on("data", d => {
-            });
-        })
-            .on("error", err => {
-            console.log("Error: " + err.message);
-        });
+    static log(text) {
+        console.log(text);
+        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 exports.BaseBrowser = BaseBrowser;
@@ -99,18 +67,24 @@ class AutoResponser extends BaseBrowser {
     }
     log(text) {
         const msg = `[Автоответчик] - ${text}`;
-        super.log(msg);
+        BaseBrowser.log(msg);
         console.log(msg);
     }
     start() {
         const _super = Object.create(null, {
             start: { get: () => super.start }
         });
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield _super.start.call(this);
+            result = 'Запущено';
+            this.process();
+            return result;
+        });
+    }
+    process() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            yield _super.start.call(this);
             const page = this.page;
-            this.log('Автоответчик начал работу!');
             while (true) {
                 yield page.goto('https://www.tiktok.com/messages');
                 yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2592000 });
@@ -143,11 +117,17 @@ class AutoFollower extends BaseBrowser {
             start: { get: () => super.start }
         });
         return __awaiter(this, void 0, void 0, function* () {
-            yield _super.start.call(this);
-            const page = this.page;
+            let result = yield _super.start.call(this);
             const contentOfFollowers = yield fs.readFile((0, path_1.resolve)(__dirname, this.props.autoFollower.followersPath));
             const followers = contentOfFollowers.toString().split('\n');
-            this.log('Автоподписка запущена!');
+            result = 'Запущено';
+            this.process(followers);
+            return result;
+        });
+    }
+    process(followers) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const page = this.page;
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
                 const messageBtn = yield page.$$(`button[class*=StyledMessageButton]`);
@@ -172,7 +152,7 @@ class AutoFollower extends BaseBrowser {
     }
     log(text) {
         const msg = `[Автоподписка] - ${text}`;
-        super.log(msg);
+        BaseBrowser.log(msg);
         console.log(msg);
     }
 }

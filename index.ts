@@ -1,4 +1,4 @@
-import {AutoFollower, AutoResponser} from "./autoResponser";
+import {AutoFollower, AutoResponser, BaseBrowser} from "./autoResponser";
 import * as path from "path";
 import {promises as fs} from "fs";
 import {BaseTTProps} from "./types";
@@ -6,10 +6,11 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import puppeteer from 'puppeteer-extra'
 import {executablePath} from 'puppeteer'
 
-
 (async () => {
     const buffer: Buffer = await fs.readFile(path.resolve(__dirname, '../config.json'));
     const accounts = JSON.parse(buffer.toString());
+
+    const status: any[] = [];
 
     for (const account of accounts) {
         const accountConfig: BaseTTProps = {
@@ -18,10 +19,11 @@ import {executablePath} from 'puppeteer'
         }
 
         puppeteer.use(StealthPlugin())
+        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
         const options = process.env.debug ? {
             headless: false,
             executablePath: executablePath(),
-            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, '--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: accountConfig.proxy?.host ? [`--proxy-server=${accountConfig.proxy.host}`, ...baseParams] : baseParams,
         } : {
             headless: true,
             executablePath: '/usr/bin/chromium-browser',
@@ -31,7 +33,10 @@ import {executablePath} from 'puppeteer'
         const responser = new AutoResponser(browser, accountConfig);
         const autoFollower = new AutoFollower(browser, accountConfig);
 
-        responser.start();
-        autoFollower.start();
+        const responserResult = await responser.start();
+        const autoFollowerResult = await autoFollower.start();
+
+        status.push({name: `Аккаунт #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult})
     }
+    BaseBrowser.log(JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  '));
 })();

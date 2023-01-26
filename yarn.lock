@@ -342,6 +342,11 @@
   dependencies:
     "whatwg-url" "^5.0.0"
 
+"nodestringtable@^1.0.2":
+  "integrity" "sha512-pmxD5aaJ3cy07+ncvtATvf+SuKE+uZufBuThpjkBsausXKGf0cASZqhArdxg1vT2vMLBv3BMPERMdu8iZoXRvw=="
+  "resolved" "https://registry.npmjs.org/nodestringtable/-/nodestringtable-1.0.2.tgz"
+  "version" "1.0.2"
+
 "once@^1.3.0", "once@^1.3.1", "once@^1.4.0":
   "integrity" "sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w=="
   "resolved" "https://registry.npmjs.org/once/-/once-1.4.0.tgz"

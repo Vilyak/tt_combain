@@ -1,7 +1,7 @@
 import {Browser, Page} from 'puppeteer';
 import {BaseTTProps} from "./types";
 import {resolve} from "path";
-import * as http from 'https';
+import {exec} from 'child_process';
 const fs = require('fs').promises;
 
 export class BaseBrowser {
@@ -32,22 +32,12 @@ export class BaseBrowser {
             });
         }
         await this.setCookies();
+        return 'НЕ Запущено!';
     }
 
-    log(text: string) {
-        const options = {
-            hostname: 'http://api.telegram.org',
-            path: `/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657&text=${text}`,
-            method: 'GET',
-        }
-
-        http.request(options, resp => {
-            resp.on("data", d => {
-                });
-            })
-            .on("error", err => {
-                console.log("Error: " + err.message);
-            });
+    static log(text: string) {
+        console.log(text);
+        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 
@@ -77,15 +67,22 @@ export class AutoResponser extends BaseBrowser {
 
     log(text: string) {
         const msg = `[Автоответчик] - ${text}`;
-        super.log(msg);
+        BaseBrowser.log(msg);
         console.log(msg);
     }
 
     async start() {
-        await super.start();
+        let result = await super.start();
+
+        result = 'Запущено';
+        this.process();
+
+        return result;
+    }
+
+    async process() {
         const page = this.page;
 
-        this.log('Автоответчик начал работу!');
         while (true) {
             await page.goto('https://www.tiktok.com/messages');
 
@@ -125,13 +122,19 @@ export class AutoResponser extends BaseBrowser {
 
 export class AutoFollower extends BaseBrowser {
     async start() {
-        await super.start();
-        const page = this.page;
+        let result = await super.start();
 
         const contentOfFollowers: Buffer = await fs.readFile(resolve(__dirname, this.props.autoFollower.followersPath));
         const followers = contentOfFollowers.toString().split('\n');
 
-        this.log('Автоподписка запущена!');
+        result = 'Запущено';
+        this.process(followers);
+
+        return result;
+    }
+
+    async process(followers: string[]) {
+        const page = this.page;
 
         for (const login of followers) {
             await page.goto(`https://www.tiktok.com/@${login}`);
@@ -164,7 +167,7 @@ export class AutoFollower extends BaseBrowser {
 
     log(text: string) {
         const msg = `[Автоподписка] - ${text}`;
-        super.log(msg);
+        BaseBrowser.log(msg);
         console.log(msg);
     }
 }
