@@ -90,7 +90,7 @@ export class AutoResponser extends BaseBrowser {
         while (true) {
             await page.goto('https://www.tiktok.com/messages', {timeout: 120000});
 
-            await page.waitForSelector('div:has(> span[class*=SpanNewMessage])', {timeout: 2592000});
+            await page.waitForSelector('div:has(> span[class*=SpanNewMessage])', {timeout: 25920000000});
 
             await delay(2000);
 
@@ -112,7 +112,7 @@ export class AutoResponser extends BaseBrowser {
                 for (const message of messages) {
                     const randomizedMessage = this.randomizeMessageLetters(message);
 
-                    await page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', {timeout: 60000});
+                    await page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', {timeout: 2592000});
 
                     await delay(2000);
 
