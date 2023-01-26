@@ -164,7 +164,7 @@ export class AutoFollower extends BaseBrowser {
 
             if (!error.length || !error2.length) {
                 await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
-                const followText = await page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
+                const followText = await page.$$eval(`button[data-e2e=follow-button]`, (element: Array<Element>) => element[0].textContent);
 
                 await delay(2000);
 
@@ -179,7 +179,7 @@ export class AutoFollower extends BaseBrowser {
 
                     await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
 
-                    const btnText = await page.$$eval(`button[data-e2e=follow-button]`, element => element[0].innerText);
+                    const btnText = await page.$$eval(`button[data-e2e=follow-button]`, (element: Array<Element>) => element[0].textContent);
 
                     await delay(2000);
 

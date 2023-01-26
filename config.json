@@ -22,7 +22,7 @@
   },
   {
     "id": 1,
-    "enabled": false,
+    "enabled": true,
     "cookiesPath": "../cookies/1.txt",
     "autoResponder": {
       "enabled": true,
@@ -63,8 +63,8 @@
     }
   },
   {
-    "id": 2,
-    "enabled": false,
+    "id": 3,
+    "enabled": true,
     "cookiesPath": "../cookies/3.txt",
     "autoResponder": {
       "enabled": true,
