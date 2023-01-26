@@ -44,7 +44,7 @@ const puppeteer_1 = require("puppeteer");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const buffer = yield fs_1.promises.readFile(path.resolve(__dirname, '../config.json'));
-    const accounts = JSON.parse(buffer.toString());
+    const accounts = JSON.parse(buffer.toString()).filter((item) => !!item.enabled);
     const status = [];
     for (const account of accounts) {
         const accountConfig = Object.assign(Object.assign({}, account), { cookiesPath: path.resolve(__dirname, account.cookiesPath) });

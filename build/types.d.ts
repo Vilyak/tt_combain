@@ -1,5 +1,6 @@
 export interface BaseTTProps {
     id: number;
+    enabled: boolean;
     cookiesPath: string;
     proxy?: {
         host: string;

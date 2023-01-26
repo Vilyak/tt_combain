@@ -8,7 +8,7 @@ import {executablePath} from 'puppeteer'
 
 (async () => {
     const buffer: Buffer = await fs.readFile(path.resolve(__dirname, '../config.json'));
-    const accounts = JSON.parse(buffer.toString());
+    const accounts = JSON.parse(buffer.toString()).filter((item: BaseTTProps) => !!item.enabled);
 
     const status: any[] = [];
 

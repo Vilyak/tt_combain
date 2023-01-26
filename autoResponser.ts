@@ -171,12 +171,18 @@ export class AutoFollower extends BaseBrowser {
 
                     await page.click('button[data-e2e=follow-button]');
 
-                    await delay(10000);
+                    await delay(3000);
+
+                    await page.goto(`https://www.tiktok.com/@${login}`);
+
+                    await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
+
+                    await delay(2000);
 
                     const followBtnIcon = await page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
 
                     if (!followBtnIcon) {
-                        this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ВОЗМОЖНО ТЕНЕВОЙ БАН`);
+                        this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ТЕНЕВОЙ БАН`);
                     }
                     else {
                         this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
