@@ -195,6 +195,7 @@ export class AutoFollower extends BaseBrowser {
             }
         }
 
+        await delay(2000);
         this.log(`[Внимание] Бот #${this.props.id} ЗАВЕРШИЛ ПОДПИСКУ НА ЛЮДЕЙ!`);
     }
 
