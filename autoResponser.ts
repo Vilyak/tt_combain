@@ -160,21 +160,20 @@ export class AutoFollower extends BaseBrowser {
             await page.goto(`https://www.tiktok.com/@${login}`);
 
             await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
-            const followBtnIcon = await page.$$(`button[data-e2e=follow-button] > svg`);
+            const followBtn = await page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
 
             const error = await page.$$(`p[class*="Title emuynwa"]`);
             const error2 = await page.$$(`p[class*="e1ksppba9"]`);
 
             if (!error.length || !error2.length) {
-                if (!followBtnIcon.length) {
+                if (!followBtn.length) {
                     await page.waitForSelector('button[data-e2e=follow-button]',{timeout: 30000});
 
                     await page.click('button[data-e2e=follow-button]');
 
-                    await page.goto(`https://www.tiktok.com/@${login}`);
+                    await delay(10000);
 
-                    await page.waitForSelector('button[data-e2e=follow-button]',{timeout: 120000});
-                    const followBtnIcon = await page.$$(`button[data-e2e=follow-button] > svg`);
+                    const followBtnIcon = await page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
 
                     if (!followBtnIcon) {
                         this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ВОЗМОЖНО ТЕНЕВОЙ БАН`);
