@@ -90,10 +90,10 @@ class AutoResponser extends BaseBrowser {
             const page = this.page;
             while (true) {
                 yield page.goto('https://www.tiktok.com/messages', { timeout: 120000 });
-                yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 25920000000 });
+                yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2147483646 });
                 yield delay(2000);
                 yield page.click('div:has(> span[class*=SpanNewMessage])');
-                yield page.waitForSelector('div[data-e2e=message-input-area]', { timeout: 2592000 });
+                yield page.waitForSelector('div[data-e2e=message-input-area]', { timeout: 259200 });
                 yield delay(2000);
                 const element = yield page.$('p[data-e2e=chat-uniqueid]');
                 const nickname = yield page.evaluate(el => el.textContent, element);
@@ -103,7 +103,7 @@ class AutoResponser extends BaseBrowser {
                     const messages = ((_a = this.props.autoResponder) === null || _a === void 0 ? void 0 : _a.messages) || [];
                     for (const message of messages) {
                         const randomizedMessage = this.randomizeMessageLetters(message);
-                        yield page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', { timeout: 2592000 });
+                        yield page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', { timeout: 25920 });
                         yield delay(2000);
                         yield page.click('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]');
                         yield page.keyboard.type(randomizedMessage, { delay: 100 });
