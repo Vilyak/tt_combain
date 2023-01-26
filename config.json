@@ -1,18 +1,60 @@
 [
   {
     "id": 0,
+    "cookiesPath": "../cookies/0.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for fre. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/0.txt"
+    },
+    "proxy": {
+      "host": "103.151.103.2:64988",
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
+  },
+  {
+    "id": 1,
     "cookiesPath": "../cookies/1.txt",
     "autoResponder": {
       "enabled": true,
       "messages": [
-        "test1",
-        "test2",
-        "test3"
+        "Hi, I have an account with intimate photos. I can share for fre. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
       ]
     },
     "autoFollower": {
       "enabled": true,
       "followersPath": "../followers/1.txt"
+    },
+    "proxy": {
+      "host": "103.151.103.2:64988",
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
+  },
+  {
+    "id": 2,
+    "cookiesPath": "../cookies/2.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for fre. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/2.txt"
     },
     "proxy": {
       "host": "103.151.103.2:64988",
