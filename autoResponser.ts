@@ -184,6 +184,8 @@ export class AutoFollower extends BaseBrowser {
                 this.log(`[Ошибка] пользователь @${login} не найден!`);
             }
         }
+
+        this.log(`[Внимание] Бот #${this.props.id} ЗАВЕРШИЛ ПОДПИСКУ НА ЛЮДЕЙ!`);
     }
 
     sendLog(text: string) {

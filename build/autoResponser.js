@@ -151,7 +151,7 @@ class AutoFollower extends BaseBrowser {
                     if (!messageBtn.length) {
                         yield page.waitForSelector('div[data-e2e=follow-button]', { timeout: 30000 });
                         yield page.click('div[data-e2e=follow-button]');
-                        this.log(`Бот (${this.props.id}) успешно подписался на пользователя @${login}!`);
+                        this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
                         yield page.goto(`https://www.tiktok.com/setting?lang=en`);
                         yield delay(600000);
                     }
@@ -163,6 +163,7 @@ class AutoFollower extends BaseBrowser {
                     this.log(`[Ошибка] пользователь @${login} не найден!`);
                 }
             }
+            this.log(`[Внимание] Бот #${this.props.id} ЗАВЕРШИЛ ПОДПИСКУ НА ЛЮДЕЙ!`);
         });
     }
     sendLog(text) {
