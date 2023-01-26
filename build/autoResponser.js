@@ -144,14 +144,22 @@ class AutoFollower extends BaseBrowser {
             const page = this.page;
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
-                const messageBtn = yield page.$$(`button[class*=StyledMessageButton]`);
+                yield page.waitForSelector(`button[data-e2e=follow-button]`);
+                const followBtnIcon = yield page.$$(`button[data-e2e=follow-button] > svg`);
                 const error = yield page.$$(`p[class*="Title emuynwa"]`);
                 const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
                 if (!error.length || !error2.length) {
-                    if (!messageBtn.length) {
-                        yield page.waitForSelector('div[data-e2e=follow-button]', { timeout: 30000 });
-                        yield page.click('div[data-e2e=follow-button]');
-                        this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
+                    if (!followBtnIcon.length) {
+                        yield page.waitForSelector('button[data-e2e=follow-button]', { timeout: 30000 });
+                        yield page.click('button[data-e2e=follow-button]');
+                        yield delay(10000);
+                        const followBtnIcon = yield page.$$(`button[data-e2e=follow-button] > svg`);
+                        if (!followBtnIcon) {
+                            this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ВОЗМОЖНО ТЕНЕВОЙ БАН`);
+                        }
+                        else {
+                            this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
+                        }
                         yield page.goto(`https://www.tiktok.com/setting?lang=en`);
                         yield delay(600000);
                     }
