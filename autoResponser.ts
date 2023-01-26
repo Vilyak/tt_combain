@@ -159,7 +159,7 @@ export class AutoFollower extends BaseBrowser {
         for (const login of followers) {
             await page.goto(`https://www.tiktok.com/@${login}`);
 
-            await page.waitForSelector(`button[data-e2e=follow-button]`);
+            await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
             const followBtnIcon = await page.$$(`button[data-e2e=follow-button] > svg`);
 
             const error = await page.$$(`p[class*="Title emuynwa"]`);
@@ -171,8 +171,9 @@ export class AutoFollower extends BaseBrowser {
 
                     await page.click('button[data-e2e=follow-button]');
 
-                    await delay(10000);
+                    await page.goto(`https://www.tiktok.com/@${login}`);
 
+                    await page.waitForSelector('button[data-e2e=follow-button]',{timeout: 120000});
                     const followBtnIcon = await page.$$(`button[data-e2e=follow-button] > svg`);
 
                     if (!followBtnIcon) {

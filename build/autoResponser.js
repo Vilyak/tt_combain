@@ -144,7 +144,7 @@ class AutoFollower extends BaseBrowser {
             const page = this.page;
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
-                yield page.waitForSelector(`button[data-e2e=follow-button]`);
+                yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
                 const followBtnIcon = yield page.$$(`button[data-e2e=follow-button] > svg`);
                 const error = yield page.$$(`p[class*="Title emuynwa"]`);
                 const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
@@ -152,7 +152,8 @@ class AutoFollower extends BaseBrowser {
                     if (!followBtnIcon.length) {
                         yield page.waitForSelector('button[data-e2e=follow-button]', { timeout: 30000 });
                         yield page.click('button[data-e2e=follow-button]');
-                        yield delay(10000);
+                        yield page.goto(`https://www.tiktok.com/@${login}`);
+                        yield page.waitForSelector('button[data-e2e=follow-button]', { timeout: 120000 });
                         const followBtnIcon = yield page.$$(`button[data-e2e=follow-button] > svg`);
                         if (!followBtnIcon) {
                             this.log(`Бот #${this.props.id} не смог полписаться на пользователя @${login}! ВОЗМОЖНО ТЕНЕВОЙ БАН`);
