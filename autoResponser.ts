@@ -128,7 +128,7 @@ export class AutoResponser extends BaseBrowser {
 
                     await delay(3000);
                 }
-                this.sendLog(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`)
+                this.sendLog(`Бот #${this.props.id} отослал сообщение пользователю: ${nickname}`);
             }
         }
     }
@@ -170,14 +170,14 @@ export class AutoFollower extends BaseBrowser {
 
                     await page.click('div[data-e2e=follow-button]');
 
-                    this.log(`Бот (${this.props.id}) успешно подписался на пользователя @${login}!`);
+                    this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
 
                     await page.goto(`https://www.tiktok.com/setting?lang=en`);
 
                     await delay(600000);
                 }
                 else {
-                    this.log(`[Внимание] Бот (${this.props.id}) уже подписан на пользователя @${login}!`);
+                    this.log(`[Внимание] Бот #${this.props.id} уже подписан на пользователя @${login}!`);
                 }
             }
             else {

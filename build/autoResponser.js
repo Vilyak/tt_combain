@@ -112,7 +112,7 @@ class AutoResponser extends BaseBrowser {
                         yield page.click('svg[data-e2e=message-send');
                         yield delay(3000);
                     }
-                    this.sendLog(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
+                    this.sendLog(`Бот #${this.props.id} отослал сообщение пользователю: ${nickname}`);
                 }
             }
         });
@@ -156,7 +156,7 @@ class AutoFollower extends BaseBrowser {
                         yield delay(600000);
                     }
                     else {
-                        this.log(`[Внимание] Бот (${this.props.id}) уже подписан на пользователя @${login}!`);
+                        this.log(`[Внимание] Бот #${this.props.id} уже подписан на пользователя @${login}!`);
                     }
                 }
                 else {
