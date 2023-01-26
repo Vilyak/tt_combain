@@ -8,7 +8,7 @@
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
     "nodestringtable": "^1.0.2",
-    "puppeteer": "^18",
+    "puppeteer": "^19",
     "puppeteer-core": "^19.5.2",
     "puppeteer-extra": "^3.3.4",
     "puppeteer-extra-plugin-stealth": "^2.11.1",

@@ -35,8 +35,12 @@ export class BaseBrowser {
         return 'НЕ Запущено!';
     }
 
-    static log(text: string) {
+    log(text: string) {
         console.log(text);
+        BaseBrowser.sendLog(text);
+    }
+
+    static sendLog(text: string) {
         exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
@@ -67,7 +71,7 @@ export class AutoResponser extends BaseBrowser {
 
     log(text: string) {
         const msg = `[Автоответчик] - ${text}`;
-        BaseBrowser.log(msg);
+        AutoResponser.sendLog(msg);
         console.log(msg);
     }
 
@@ -84,13 +88,17 @@ export class AutoResponser extends BaseBrowser {
         const page = this.page;
 
         while (true) {
-            await page.goto('https://www.tiktok.com/messages');
+            await page.goto('https://www.tiktok.com/messages', {timeout: 120000});
 
             await page.waitForSelector('div:has(> span[class*=SpanNewMessage])', {timeout: 2592000});
+
+            await delay(2000);
 
             await page.click('div:has(> span[class*=SpanNewMessage])');
 
             await page.waitForSelector('div[data-e2e=message-input-area]', {timeout: 2592000});
+
+            await delay(2000);
 
             const element = await page.$('p[data-e2e=chat-uniqueid]')
             const nickname = await page.evaluate(el => el.textContent, element);
@@ -104,19 +112,30 @@ export class AutoResponser extends BaseBrowser {
                 for (const message of messages) {
                     const randomizedMessage = this.randomizeMessageLetters(message);
 
+                    await page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', {timeout: 60000});
+
+                    await delay(2000);
+
                     await page.click('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]');
 
                     await page.keyboard.type(randomizedMessage, {delay: 100})
 
                     await page.waitForSelector('svg[data-e2e=message-send');
 
+                    await delay(2000);
+
                     await page.click('svg[data-e2e=message-send');
 
                     await delay(3000);
                 }
-                this.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
+                this.sendLog(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`)
             }
         }
+    }
+
+    sendLog(text: string) {
+        console.log(text);
+        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 
@@ -125,11 +144,12 @@ export class AutoFollower extends BaseBrowser {
         let result = await super.start();
 
         const contentOfFollowers: Buffer = await fs.readFile(resolve(__dirname, this.props.autoFollower.followersPath));
-        const followers = contentOfFollowers.toString().split('\n');
+        const followers = contentOfFollowers.toString().split('\n').filter(item => item !== '');
 
-        result = 'Запущено';
-        this.process(followers);
-
+        if (followers.length) {
+            result = 'Запущено';
+            this.process(followers);
+        }
         return result;
     }
 
@@ -142,8 +162,9 @@ export class AutoFollower extends BaseBrowser {
             const messageBtn = await page.$$(`button[class*=StyledMessageButton]`);
 
             const error = await page.$$(`p[class*="Title emuynwa"]`);
+            const error2 = await page.$$(`p[class*="e1ksppba9"]`);
 
-            if (!error.length) {
+            if (!error.length || !error2.length) {
                 if (!messageBtn.length) {
                     await page.waitForSelector('div[data-e2e=follow-button]',{timeout: 30000});
 
@@ -165,10 +186,9 @@ export class AutoFollower extends BaseBrowser {
         }
     }
 
-    log(text: string) {
-        const msg = `[Автоподписка] - ${text}`;
-        BaseBrowser.log(msg);
-        console.log(msg);
+    sendLog(text: string) {
+        console.log(text);
+        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 

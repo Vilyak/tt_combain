@@ -19,7 +19,7 @@ import {executablePath} from 'puppeteer'
         }
 
         puppeteer.use(StealthPlugin())
-        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
+        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080',];
         const options = process.env.debug ? {
             headless: false,
             executablePath: executablePath(),
@@ -36,7 +36,9 @@ import {executablePath} from 'puppeteer'
         const responserResult = await responser.start();
         const autoFollowerResult = await autoFollower.start();
 
-        status.push({name: `Аккаунт #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult})
+        status.push({name: `Акк #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult})
     }
-    BaseBrowser.log(JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  '));
+    const statusData = JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  ');
+    console.log(statusData)
+    BaseBrowser.sendLog(statusData);
 })();

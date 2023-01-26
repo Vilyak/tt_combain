@@ -49,7 +49,7 @@ const puppeteer_1 = require("puppeteer");
     for (const account of accounts) {
         const accountConfig = Object.assign(Object.assign({}, account), { cookiesPath: path.resolve(__dirname, account.cookiesPath) });
         puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
-        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
+        const baseParams = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080',];
         const options = process.env.debug ? {
             headless: false,
             executablePath: (0, puppeteer_1.executablePath)(),
@@ -64,8 +64,10 @@ const puppeteer_1 = require("puppeteer");
         const autoFollower = new autoResponser_1.AutoFollower(browser, accountConfig);
         const responserResult = yield responser.start();
         const autoFollowerResult = yield autoFollower.start();
-        status.push({ name: `Аккаунт #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult });
+        status.push({ name: `Акк #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult });
     }
-    autoResponser_1.BaseBrowser.log(JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  '));
+    const statusData = JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  ');
+    console.log(statusData);
+    autoResponser_1.BaseBrowser.sendLog(statusData);
 }))();
 //# sourceMappingURL=index.js.map

@@ -41,8 +41,11 @@ class BaseBrowser {
             return 'НЕ Запущено!';
         });
     }
-    static log(text) {
+    log(text) {
         console.log(text);
+        BaseBrowser.sendLog(text);
+    }
+    static sendLog(text) {
         (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
@@ -67,7 +70,7 @@ class AutoResponser extends BaseBrowser {
     }
     log(text) {
         const msg = `[Автоответчик] - ${text}`;
-        BaseBrowser.log(msg);
+        AutoResponser.sendLog(msg);
         console.log(msg);
     }
     start() {
@@ -86,10 +89,12 @@ class AutoResponser extends BaseBrowser {
         return __awaiter(this, void 0, void 0, function* () {
             const page = this.page;
             while (true) {
-                yield page.goto('https://www.tiktok.com/messages');
+                yield page.goto('https://www.tiktok.com/messages', { timeout: 120000 });
                 yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2592000 });
+                yield delay(2000);
                 yield page.click('div:has(> span[class*=SpanNewMessage])');
                 yield page.waitForSelector('div[data-e2e=message-input-area]', { timeout: 2592000 });
+                yield delay(2000);
                 const element = yield page.$('p[data-e2e=chat-uniqueid]');
                 const nickname = yield page.evaluate(el => el.textContent, element);
                 const otherMessages = yield page.$$(`div[class*=DivMessageContainer] > a[href*="/${nickname}"]`);
@@ -98,16 +103,23 @@ class AutoResponser extends BaseBrowser {
                     const messages = ((_a = this.props.autoResponder) === null || _a === void 0 ? void 0 : _a.messages) || [];
                     for (const message of messages) {
                         const randomizedMessage = this.randomizeMessageLetters(message);
+                        yield page.waitForSelector('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]', { timeout: 60000 });
+                        yield delay(2000);
                         yield page.click('div[data-e2e=message-input-area] > div[class*=DivEditorContainer]');
                         yield page.keyboard.type(randomizedMessage, { delay: 100 });
                         yield page.waitForSelector('svg[data-e2e=message-send');
+                        yield delay(2000);
                         yield page.click('svg[data-e2e=message-send');
                         yield delay(3000);
                     }
-                    this.log(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
+                    this.sendLog(`Бот(${this.props.id}) отослал сообщение пользователю: ${nickname}`);
                 }
             }
         });
+    }
+    sendLog(text) {
+        console.log(text);
+        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 exports.AutoResponser = AutoResponser;
@@ -119,9 +131,11 @@ class AutoFollower extends BaseBrowser {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield _super.start.call(this);
             const contentOfFollowers = yield fs.readFile((0, path_1.resolve)(__dirname, this.props.autoFollower.followersPath));
-            const followers = contentOfFollowers.toString().split('\n');
-            result = 'Запущено';
-            this.process(followers);
+            const followers = contentOfFollowers.toString().split('\n').filter(item => item !== '');
+            if (followers.length) {
+                result = 'Запущено';
+                this.process(followers);
+            }
             return result;
         });
     }
@@ -132,7 +146,8 @@ class AutoFollower extends BaseBrowser {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
                 const messageBtn = yield page.$$(`button[class*=StyledMessageButton]`);
                 const error = yield page.$$(`p[class*="Title emuynwa"]`);
-                if (!error.length) {
+                const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
+                if (!error.length || !error2.length) {
                     if (!messageBtn.length) {
                         yield page.waitForSelector('div[data-e2e=follow-button]', { timeout: 30000 });
                         yield page.click('div[data-e2e=follow-button]');
@@ -150,10 +165,9 @@ class AutoFollower extends BaseBrowser {
             }
         });
     }
-    log(text) {
-        const msg = `[Автоподписка] - ${text}`;
-        BaseBrowser.log(msg);
-        console.log(msg);
+    sendLog(text) {
+        console.log(text);
+        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
     }
 }
 exports.AutoFollower = AutoFollower;
