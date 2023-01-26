@@ -134,7 +134,7 @@ class AutoFollower extends BaseBrowser {
             const followers = contentOfFollowers.toString().split('\n').filter(item => item !== '');
             if (followers.length) {
                 result = 'Запущено';
-                this.process(followers);
+                this.process(followers.map(item => item.replace('‬', '')));
             }
             return result;
         });
@@ -144,11 +144,11 @@ class AutoFollower extends BaseBrowser {
             const page = this.page;
             for (const login of followers) {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
-                yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
-                const followBtn = yield page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
                 const error = yield page.$$(`p[class*="Title emuynwa"]`);
                 const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
                 if (!error.length || !error2.length) {
+                    yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
+                    const followBtn = yield page.$$(`div[class*=gvq8tv-DivFollowButtonWrapper]`);
                     if (!followBtn.length) {
                         yield page.waitForSelector('button[data-e2e=follow-button]', { timeout: 30000 });
                         yield page.click('button[data-e2e=follow-button]');
