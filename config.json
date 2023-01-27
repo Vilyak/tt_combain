@@ -82,5 +82,89 @@
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
+  },
+  {
+    "id": 4,
+    "enabled": true,
+    "cookiesPath": "../cookies/4.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for free. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/4.txt"
+    },
+    "proxy": {
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
+  },
+  {
+    "id": 5,
+    "enabled": true,
+    "cookiesPath": "../cookies/5.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for free. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/5.txt"
+    },
+    "proxy": {
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
+  },
+  {
+    "id": 6,
+    "enabled": true,
+    "cookiesPath": "../cookies/6.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for free. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/6.txt"
+    },
+    "proxy": {
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
+  },
+  {
+    "id": 7,
+    "enabled": true,
+    "cookiesPath": "../cookies/7.txt",
+    "autoResponder": {
+      "enabled": true,
+      "messages": [
+        "Hi, I have an account with intimate photos. I can share for free. You just need to register for free and find me by nickname: vkissely97 \uD83E\uDD70",
+        "We can arrange a meeting there\uD83D\uDE0D  I will send a link to the site with the next message. Just paste it into the browser \uD83D\uDE18\uD83D\uDE18\uD83D\uDE18",
+        "https://t.ly/4KNTM"
+      ]
+    },
+    "autoFollower": {
+      "enabled": true,
+      "followersPath": "../followers/7.txt"
+    },
+    "proxy": {
+      "login": "Lr1UMAA3",
+      "password": "xe8KVVte"
+    }
   }
 ]
