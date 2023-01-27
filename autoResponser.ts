@@ -144,11 +144,11 @@ export class AutoFollower extends BaseBrowser {
         let result = await super.start();
 
         const contentOfFollowers: Buffer = await fs.readFile(resolve(__dirname, this.props.autoFollower.followersPath));
-        const followers = contentOfFollowers.toString().split('\n').filter(item => item !== '');
+        const followers = await this.getFilteredFollowers(contentOfFollowers.toString().split('\n').filter(item => item !== '').map(item => item.replace('‬', '')));
 
         if (followers.length) {
             result = 'Запущено';
-            this.process(followers.map(item => item.replace('‬', '')));
+            this.process(followers);
         }
         return result;
     }
@@ -189,6 +189,7 @@ export class AutoFollower extends BaseBrowser {
                     }
                     else {
                         this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
+                        await this.cacheFollower(login);
                     }
 
                     await page.goto(`https://www.tiktok.com/setting?lang=en`);
@@ -197,16 +198,29 @@ export class AutoFollower extends BaseBrowser {
                 }
                 else {
                     this.log(`[Внимание] Бот #${this.props.id} уже подписан на пользователя @${login}!`);
+                    await this.cacheFollower(login);
                 }
             }
             else {
                 this.log(`[Ошибка] пользователь @${login} не найден!`);
+                await this.cacheFollower(login);
             }
         }
 
         await delay(2000);
         this.log(`[Внимание] Бот #${this.props.id} ЗАВЕРШИЛ ПОДПИСКУ НА ЛЮДЕЙ!`);
     }
+
+    async cacheFollower(follower: string) {
+        await fs.appendFile(resolve(__dirname, `../cache/${this.props.id}.txt`), `${follower}\n`);
+    }
+
+    async getFilteredFollowers(allFollowers: string[]) {
+        const buffer: Buffer = await fs.readFile(resolve(__dirname, `../cache/${this.props.id}.txt`), {flag: 'a+'});
+        const cachedFollowers = buffer.toString().split('\n').filter(item => item !== '');
+        return allFollowers.filter(usr => !cachedFollowers.includes(usr));
+    }
+
 
     sendLog(text: string) {
         console.log(text);

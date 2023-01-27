@@ -131,10 +131,10 @@ class AutoFollower extends BaseBrowser {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield _super.start.call(this);
             const contentOfFollowers = yield fs.readFile((0, path_1.resolve)(__dirname, this.props.autoFollower.followersPath));
-            const followers = contentOfFollowers.toString().split('\n').filter(item => item !== '');
+            const followers = yield this.getFilteredFollowers(contentOfFollowers.toString().split('\n').filter(item => item !== '').map(item => item.replace('‬', '')));
             if (followers.length) {
                 result = 'Запущено';
-                this.process(followers.map(item => item.replace('‬', '')));
+                this.process(followers);
             }
             return result;
         });
@@ -164,20 +164,35 @@ class AutoFollower extends BaseBrowser {
                         }
                         else {
                             this.log(`Бот #${this.props.id} успешно подписался на пользователя @${login}!`);
+                            yield this.cacheFollower(login);
                         }
                         yield page.goto(`https://www.tiktok.com/setting?lang=en`);
                         yield delay(600000);
                     }
                     else {
                         this.log(`[Внимание] Бот #${this.props.id} уже подписан на пользователя @${login}!`);
+                        yield this.cacheFollower(login);
                     }
                 }
                 else {
                     this.log(`[Ошибка] пользователь @${login} не найден!`);
+                    yield this.cacheFollower(login);
                 }
             }
             yield delay(2000);
             this.log(`[Внимание] Бот #${this.props.id} ЗАВЕРШИЛ ПОДПИСКУ НА ЛЮДЕЙ!`);
+        });
+    }
+    cacheFollower(follower) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield fs.appendFile((0, path_1.resolve)(__dirname, `../cache/${this.props.id}.txt`), `${follower}\n`);
+        });
+    }
+    getFilteredFollowers(allFollowers) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const buffer = yield fs.readFile((0, path_1.resolve)(__dirname, `../cache/${this.props.id}.txt`), { flag: 'a+' });
+            const cachedFollowers = buffer.toString().split('\n').filter(item => item !== '');
+            return allFollowers.filter(usr => !cachedFollowers.includes(usr));
         });
     }
     sendLog(text) {

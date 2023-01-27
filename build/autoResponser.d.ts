@@ -20,5 +20,7 @@ export declare class AutoResponser extends BaseBrowser {
 export declare class AutoFollower extends BaseBrowser {
     start(): Promise<string>;
     process(followers: string[]): Promise<void>;
+    cacheFollower(follower: string): Promise<void>;
+    getFilteredFollowers(allFollowers: string[]): Promise<string[]>;
     sendLog(text: string): void;
 }
