@@ -39,6 +39,5 @@ import {executablePath} from 'puppeteer'
         status.push({name: `Акк #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult})
     }
     const statusData = JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  ');
-    console.log(statusData)
     BaseBrowser.sendLog(statusData);
 })();

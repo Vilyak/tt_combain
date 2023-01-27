@@ -63,11 +63,10 @@ const puppeteer_1 = require("puppeteer");
         const responser = new autoResponser_1.AutoResponser(browser, accountConfig);
         const autoFollower = new autoResponser_1.AutoFollower(browser, accountConfig);
         const responserResult = yield responser.start();
-        const autoFollowerResult = yield autoFollower.start();
+        const autoFollowerResult = 'no'; // await autoFollower.start();
         status.push({ name: `Акк #${accountConfig.id}`, autoResponser: responserResult, autoFollower: autoFollowerResult });
     }
     const statusData = JSON.stringify(status.map((item) => `${item.name}| [${item.autoResponser} | ${item.autoFollower}]`), null, '  ');
-    console.log(statusData);
     autoResponser_1.BaseBrowser.sendLog(statusData);
 }))();
 //# sourceMappingURL=index.js.map

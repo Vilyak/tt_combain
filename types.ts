@@ -16,3 +16,8 @@ export interface BaseTTProps {
         followersPath: string;
     },
 }
+
+export interface Selector {
+    type: 'css' | 'xpath';
+    text: string;
+}

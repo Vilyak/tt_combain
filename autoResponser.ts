@@ -1,7 +1,8 @@
-import {Browser, Page} from 'puppeteer';
-import {BaseTTProps} from "./types";
+import {Browser, ElementHandle, Page} from 'puppeteer';
+import {BaseTTProps, Selector} from "./types";
 import {resolve} from "path";
 import {exec} from 'child_process';
+import {scrollTo} from "./scrollTo";
 const fs = require('fs').promises;
 
 export class BaseBrowser {
@@ -36,18 +37,23 @@ export class BaseBrowser {
     }
 
     log(text: string) {
-        console.log(text);
         BaseBrowser.sendLog(text);
     }
 
     static sendLog(text: string) {
-        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        console.log(text);
+        if (!process.env.debug) {
+            exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 
 export class AutoResponser extends BaseBrowser {
 
     randomizeMessageLetters(text: string) {
+        if (text.startsWith('https://')) {
+            return text;
+        }
         let result = '';
 
         for (const char of text) {
@@ -72,7 +78,6 @@ export class AutoResponser extends BaseBrowser {
     log(text: string) {
         const msg = `[Автоответчик] - ${text}`;
         AutoResponser.sendLog(msg);
-        console.log(msg);
     }
 
     async start() {
@@ -87,14 +92,29 @@ export class AutoResponser extends BaseBrowser {
     async process() {
         const page = this.page;
 
+
         while (true) {
             await page.goto('https://www.tiktok.com/messages', {timeout: 120000});
 
-            await page.waitForSelector('div:has(> span[class*=SpanNewMessage])', {timeout: 2147483646});
+            const selector = await waitForAnySelector(page, [
+                { type: 'css', text: 'div:has(> span[class*=SpanNewMessage])' },
+                // { type: 'xpath', text: '//p[2]/span[contains(text(),\'This message type\')]' },
+                // { type: 'xpath', text: '//p[2]/span[string-length() = 0]' },
+            ]);
 
             await delay(2000);
 
-            await page.click('div:has(> span[class*=SpanNewMessage])');
+            const sel = (selector as Selector);
+            if (sel.type === 'css') {
+                await page.click(sel.text);
+            }
+            else {
+                const el = await page.$x(sel.text);
+                // @ts-ignore
+                await el[0].click();
+            }
+
+            await delay(2000);
 
             await page.waitForSelector('div[data-e2e=message-input-area]', {timeout: 259200});
 
@@ -135,7 +155,9 @@ export class AutoResponser extends BaseBrowser {
 
     sendLog(text: string) {
         console.log(text);
-        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        if (!process.env.debug) {
+            exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 
@@ -224,7 +246,9 @@ export class AutoFollower extends BaseBrowser {
 
     sendLog(text: string) {
         console.log(text);
-        exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        if (!process.env.debug) {
+            exec(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 
@@ -237,14 +261,26 @@ async function delay(ms: number) {
     return await new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function isLocatorReady(element: any, page: Page) {
-    const isVisibleHandle = await page.evaluateHandle((e) =>
-    {
-        const style = window.getComputedStyle(e);
-        return (style && style.display !== 'none' &&
-            style.visibility !== 'hidden' && style.opacity !== '0');
-    }, element);
-    var visible = await isVisibleHandle.jsonValue();
-    const box = await element.boxModel();
-    return visible;
-}
+const waitForAnySelector = (page: Page, selectors: Selector[]) => new Promise((resolve, reject) => {
+    let hasFound = false
+    selectors.forEach(selector => {
+        if (selector.type === 'css') {
+            page.waitForSelector(selector.text, {timeout: 2147483646, visible: false})
+                .then(() => {
+                    if (!hasFound) {
+                        hasFound = true
+                        resolve(selector)
+                    }
+                });
+        }
+        else {
+            page.waitForXPath(selector.text, {timeout: 2147483646, visible: false})
+                .then(() => {
+                    if (!hasFound) {
+                        hasFound = true
+                        resolve(selector)
+                    }
+                });
+        }
+    })
+})

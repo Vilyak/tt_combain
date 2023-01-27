@@ -42,16 +42,21 @@ class BaseBrowser {
         });
     }
     log(text) {
-        console.log(text);
         BaseBrowser.sendLog(text);
     }
     static sendLog(text) {
-        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        console.log(text);
+        if (!process.env.debug) {
+            (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 exports.BaseBrowser = BaseBrowser;
 class AutoResponser extends BaseBrowser {
     randomizeMessageLetters(text) {
+        if (text.startsWith('https://')) {
+            return text;
+        }
         let result = '';
         for (const char of text) {
             let res = char;
@@ -71,7 +76,6 @@ class AutoResponser extends BaseBrowser {
     log(text) {
         const msg = `[Автоответчик] - ${text}`;
         AutoResponser.sendLog(msg);
-        console.log(msg);
     }
     start() {
         const _super = Object.create(null, {
@@ -90,9 +94,22 @@ class AutoResponser extends BaseBrowser {
             const page = this.page;
             while (true) {
                 yield page.goto('https://www.tiktok.com/messages', { timeout: 120000 });
-                yield page.waitForSelector('div:has(> span[class*=SpanNewMessage])', { timeout: 2147483646 });
+                const selector = yield waitForAnySelector(page, [
+                    { type: 'css', text: 'div:has(> span[class*=SpanNewMessage])' },
+                    // { type: 'xpath', text: '//p[2]/span[contains(text(),\'This message type\')]' },
+                    // { type: 'xpath', text: '//p[2]/span[string-length() = 0]' },
+                ]);
                 yield delay(2000);
-                yield page.click('div:has(> span[class*=SpanNewMessage])');
+                const sel = selector;
+                if (sel.type === 'css') {
+                    yield page.click(sel.text);
+                }
+                else {
+                    const el = yield page.$x(sel.text);
+                    // @ts-ignore
+                    yield el[0].click();
+                }
+                yield delay(2000);
                 yield page.waitForSelector('div[data-e2e=message-input-area]', { timeout: 259200 });
                 yield delay(2000);
                 const element = yield page.$('p[data-e2e=chat-uniqueid]');
@@ -119,7 +136,9 @@ class AutoResponser extends BaseBrowser {
     }
     sendLog(text) {
         console.log(text);
-        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        if (!process.env.debug) {
+            (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 exports.AutoResponser = AutoResponser;
@@ -197,7 +216,9 @@ class AutoFollower extends BaseBrowser {
     }
     sendLog(text) {
         console.log(text);
-        (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        if (!process.env.debug) {
+            (0, child_process_1.exec)(`curl -X GET https://api.telegram.org/bot5731320646:AAFuFhVOZt-M2-xz2cSmujsDI4Z3ebHx5nc/sendMessage?chat_id=479218657 -d text=${encodeURI(text)}`);
+        }
     }
 }
 exports.AutoFollower = AutoFollower;
@@ -210,16 +231,27 @@ function delay(ms) {
         return yield new Promise(resolve => setTimeout(resolve, ms));
     });
 }
-function isLocatorReady(element, page) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const isVisibleHandle = yield page.evaluateHandle((e) => {
-            const style = window.getComputedStyle(e);
-            return (style && style.display !== 'none' &&
-                style.visibility !== 'hidden' && style.opacity !== '0');
-        }, element);
-        var visible = yield isVisibleHandle.jsonValue();
-        const box = yield element.boxModel();
-        return visible;
+const waitForAnySelector = (page, selectors) => new Promise((resolve, reject) => {
+    let hasFound = false;
+    selectors.forEach(selector => {
+        if (selector.type === 'css') {
+            page.waitForSelector(selector.text, { timeout: 2147483646, visible: false })
+                .then(() => {
+                if (!hasFound) {
+                    hasFound = true;
+                    resolve(selector);
+                }
+            });
+        }
+        else {
+            page.waitForXPath(selector.text, { timeout: 2147483646, visible: false })
+                .then(() => {
+                if (!hasFound) {
+                    hasFound = true;
+                    resolve(selector);
+                }
+            });
+        }
     });
-}
+});
 //# sourceMappingURL=autoResponser.js.map
