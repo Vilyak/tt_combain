@@ -161,9 +161,9 @@ export class AutoFollower extends BaseBrowser {
 
             await page.waitForSelector('div[class*=DivErrorContainer]');
             const error1 = await page.$$(`main > div[class*=DivErrorContainer] > p`);
-            const error2 = await page.$$(`p[class*="e1ksppba9"]`);
+            const error1Text = error1.length ? await page.$$eval(`main > div[class*=DivErrorContainer] > p`, (element: Array<Element>) => element[0].textContent) : '';
 
-            if (!error1.length && !error2.length) {
+            if (error1Text !== 'Couldn\'t find this account') {
                 await page.waitForSelector(`button[data-e2e=follow-button]`, {timeout: 120000});
                 const followText = await page.$$eval(`button[data-e2e=follow-button]`, (element: Array<Element>) => element[0].textContent);
 

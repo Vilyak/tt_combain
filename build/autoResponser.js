@@ -146,8 +146,8 @@ class AutoFollower extends BaseBrowser {
                 yield page.goto(`https://www.tiktok.com/@${login}`);
                 yield page.waitForSelector('div[class*=DivErrorContainer]');
                 const error1 = yield page.$$(`main > div[class*=DivErrorContainer] > p`);
-                const error2 = yield page.$$(`p[class*="e1ksppba9"]`);
-                if (!error1.length && !error2.length) {
+                const error1Text = error1.length ? yield page.$$eval(`main > div[class*=DivErrorContainer] > p`, (element) => element[0].textContent) : '';
+                if (error1Text !== 'Couldn\'t find this account') {
                     yield page.waitForSelector(`button[data-e2e=follow-button]`, { timeout: 120000 });
                     const followText = yield page.$$eval(`button[data-e2e=follow-button]`, (element) => element[0].textContent);
                     yield delay(2000);
