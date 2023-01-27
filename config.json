@@ -37,7 +37,6 @@
       "followersPath": "../followers/1.txt"
     },
     "proxy": {
-      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
@@ -59,7 +58,6 @@
       "followersPath": "../followers/2.txt"
     },
     "proxy": {
-      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
@@ -81,7 +79,6 @@
       "followersPath": "../followers/3.txt"
     },
     "proxy": {
-      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
