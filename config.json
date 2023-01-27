@@ -37,13 +37,14 @@
       "followersPath": "../followers/1.txt"
     },
     "proxy": {
+      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
   },
   {
     "id": 2,
-    "enabled": false,
+    "enabled": true,
     "cookiesPath": "../cookies/2.txt",
     "autoResponder": {
       "enabled": true,
@@ -58,13 +59,14 @@
       "followersPath": "../followers/2.txt"
     },
     "proxy": {
+      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
   },
   {
     "id": 3,
-    "enabled": false,
+    "enabled": true,
     "cookiesPath": "../cookies/3.txt",
     "autoResponder": {
       "enabled": true,
@@ -79,6 +81,7 @@
       "followersPath": "../followers/3.txt"
     },
     "proxy": {
+      "host": "103.151.103.2:64988",
       "login": "Lr1UMAA3",
       "password": "xe8KVVte"
     }
