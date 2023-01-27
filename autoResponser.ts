@@ -92,7 +92,7 @@ export class AutoResponser extends BaseBrowser {
     async process() {
         const page = this.page;
 
-
+        await page.setDefaultNavigationTimeout(0);
         while (true) {
             await page.goto('https://www.tiktok.com/messages', {timeout: 120000});
 
@@ -177,6 +177,7 @@ export class AutoFollower extends BaseBrowser {
 
     async process(followers: string[]) {
         const page = this.page;
+        await page.setDefaultNavigationTimeout(0);
 
         for (const login of followers) {
             await page.goto(`https://www.tiktok.com/@${login}`);
